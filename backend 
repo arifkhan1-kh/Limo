@@ -1,0 +1,47 @@
+from fastapi import FastAPI
+from pydantic import BaseModel
+import random
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+# Enable CORS for frontend access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Input model
+class SignalRequest(BaseModel):
+    pair: str
+    timeframe: str
+
+# Dummy signal generator with behavior mimic
+@app.post("/get-signal")
+def get_signal(data: SignalRequest):
+    pair = data.pair.lower()
+    timeframe = data.timeframe
+
+    # Simulate OTC behavior-based logic (can be replaced with AI model)
+    patterns = ["rejection", "trap", "repeat", "random"]
+    detected_pattern = random.choice(patterns)
+
+    if detected_pattern == "rejection":
+        signal = "DOWN"
+    elif detected_pattern == "trap":
+        signal = "UP"
+    elif detected_pattern == "repeat":
+        signal = random.choice(["UP", "DOWN"])
+    else:
+        signal = random.choice(["UP", "DOWN"])
+
+    return {
+        "pair": pair,
+        "timeframe": timeframe,
+        "pattern": detected_pattern,
+        "signal": signal,
+        "confidence": f"{random.randint(80, 95)}%"
+    }
