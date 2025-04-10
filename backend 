@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+infrom fastapi import FastAPI
 from pydantic import BaseModel
 import random
 from fastapi.middleware.cors import CORSMiddleware
@@ -45,3 +45,10 @@ def get_signal(data: SignalRequest):
         "signal": signal,
         "confidence": f"{random.randint(80, 95)}%"
     }
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/get-signal")  # یہ والا endpoint ہونا چاہیے
+def get_signal():
+    return {"signal": "UP"}
